@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/newEntryFragment"
+        android:icon="@drawable/create"
+        android:title="Create" />
+    <item
+        android:id="@+id/homepageFragment"
+        android:icon="@drawable/homepage"
+        android:title="Homepage" />
+    <item
+        android:id="@+id/mapViewFragment"
+        android:icon="@drawable/map"
+        android:title="Map" />
+</menu>

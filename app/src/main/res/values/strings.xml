@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Journal Quarantine</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="locations">Locations</string>
+    <string name="new_entry">New Journal Entry</string>
 </resources>
