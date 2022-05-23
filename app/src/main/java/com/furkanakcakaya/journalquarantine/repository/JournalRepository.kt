@@ -1,10 +1,12 @@
 package com.furkanakcakaya.journalquarantine.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.furkanakcakaya.journalquarantine.entities.JournalEntry
 
 class JournalRepository {
+    private val TAG = "JournalRepository"
     private val journalData: MutableLiveData<List<JournalEntry>> = MutableLiveData()
 
     init {
@@ -54,5 +56,29 @@ class JournalRepository {
             )
         )
         journalData.value = journalList
+    }
+
+    fun orderJournals(){
+        //order journalData list by date
+        val journalList = journalData.value
+        journalList?.sortedBy { it.createdAt }
+        journalData.value = journalList
+    }
+
+    fun deleteJournalEntry(id: Int) {
+        journalData.value = journalData.value?.filter { it.id != id }
+        orderJournals()
+    }
+
+    fun insertJournalEntry(entry: JournalEntry) {
+        val newJournalList = ArrayList<JournalEntry>()
+        newJournalList.addAll(journalData.value!!)
+        newJournalList.add(entry)
+        journalData.value = newJournalList
+        orderJournals()
+    }
+
+    fun addEntry(entry: String, content: String, mood: String) {
+        Log.i(TAG, "addEntry: ")
     }
 }

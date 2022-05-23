@@ -1,5 +1,7 @@
 package com.furkanakcakaya.journalquarantine.entities
 
+import java.util.*
+
 data class JournalEntry(
     var id: Int,
     var title: String,

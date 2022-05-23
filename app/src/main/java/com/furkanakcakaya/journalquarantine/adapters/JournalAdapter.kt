@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.furkanakcakaya.journalquarantine.R
 import com.furkanakcakaya.journalquarantine.databinding.JournalItemBinding
@@ -11,7 +12,8 @@ import com.furkanakcakaya.journalquarantine.entities.JournalEntry
 
 class JournalAdapter(
     private val mContext:Context,
-    private val journalList: List<JournalEntry>
+    private val journalList: List<JournalEntry>,
+    private val viewModel: ViewModel
     ) : RecyclerView.Adapter<JournalAdapter.ViewHolder>() {
     inner class ViewHolder(val binding:JournalItemBinding) : RecyclerView.ViewHolder(binding.root)
 

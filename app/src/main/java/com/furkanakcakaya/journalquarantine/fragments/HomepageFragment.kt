@@ -30,7 +30,8 @@ class HomepageFragment : Fragment() {
         binding.fragment = this
 
         viewModel.journalList.observe(viewLifecycleOwner) {
-            binding.adapter = JournalAdapter(requireContext(),it)
+            viewModel.createSwipeGesture(requireContext(),binding.rvEntries)
+            binding.adapter = JournalAdapter(requireContext(),it, viewModel)
         }
 
         return binding.root
