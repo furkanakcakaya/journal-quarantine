@@ -24,10 +24,12 @@ class JournalRepository {
                 1,
                 "Journal 1",
                 "This is the first journal entry",
+                "Sample Mood",
                 "2020-01-01",
                 "Davutpaşa",
                 42.5,
                 41.4,
+                listOf(),
                 ""
             )
         )
@@ -36,10 +38,12 @@ class JournalRepository {
                 2,
                 "Journal 2",
                 "This is the second journal entry",
+                "Sample Mood",
                 "2020-01-02",
                 "Davutpaşa",
                 42.5,
                 41.4,
+                listOf(),
                 ""
             )
         )
@@ -48,10 +52,12 @@ class JournalRepository {
                 3,
                 "Journal 3",
                 "This is the third journal entry",
+                "Sample Mood",
                 "2020-01-03",
                 "Davutpaşa",
                 42.5,
                 41.4,
+                listOf(),
                 ""
             )
         )
@@ -78,7 +84,4 @@ class JournalRepository {
         orderJournals()
     }
 
-    fun addEntry(entry: String, content: String, mood: String) {
-        Log.i(TAG, "addEntry: ")
-    }
 }

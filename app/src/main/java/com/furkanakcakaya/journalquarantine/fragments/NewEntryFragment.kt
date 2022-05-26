@@ -21,14 +21,10 @@ class NewEntryFragment : Fragment() {
     private lateinit var viewModel: NewEntryViewModel
 
     private var resultLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult(),
+        ActivityResultContracts.GetMultipleContents(),
         ActivityResultCallback { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                Log.i(TAG, "result.data : ${result.data}")
-            }
+            viewModel.addMediaContent(result)
         })
-//TODO: Add a resultLauncher for the camera
-    //MUTIPLE IMAGES
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,11 +51,8 @@ class NewEntryFragment : Fragment() {
     }
 
     fun selectImages() {
-        val intent = Intent()
-        intent.type = "image/*"
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-        intent.action = Intent.ACTION_GET_CONTENT
-        resultLauncher.launch( Intent.createChooser(intent, "Select Picture"))
+        val type = "image/*"
+        resultLauncher.launch(type)
     }
 
 
