@@ -63,9 +63,12 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:2.3.3"
     implementation "androidx.navigation:navigation-ui-ktx:2.3.3"
 
-//RecyclerView Swipe Decorator
+//  RecyclerView Swipe Decorator
     implementation 'com.github.xabaras:RecyclerViewSwipeDecorator:1.3'
 
-//Lottie
+//  Lottie
     implementation 'com.airbnb.android:lottie:5.0.3'
+
+//  Location
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
 }

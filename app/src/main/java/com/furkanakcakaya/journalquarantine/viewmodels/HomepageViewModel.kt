@@ -13,37 +13,15 @@ import com.google.android.material.snackbar.Snackbar
 
 class HomepageViewModel : ViewModel(){
     private val TAG = "HomepageViewModel"
-    private val jRepo = JournalRepository()
+    private val jRepo = JournalRepository
     var journalList: LiveData<List<JournalEntry>> = jRepo.getJournalData()
 
-    fun createSwipeGesture(context: Context, recyclerView: RecyclerView){
-        val swipeGesture = object : SwipeGesture(context){
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val position = viewHolder.bindingAdapterPosition
-                when(direction){
-                    ItemTouchHelper.RIGHT -> {
+    fun deleteJournalEntry(id: Int) {
+        jRepo.deleteJournalEntry(id)
+    }
 
-                        recyclerView.adapter?.notifyDataSetChanged()
-                    }
-                    ItemTouchHelper.LEFT -> {
-                        Log.i(TAG, "onSwiped: left delete")
-                        val deletedJournalEntry = journalList.value?.get(position)
-                        if (deletedJournalEntry == null) {
-                            Log.i(TAG, "onSwiped: deletedJournalEntry is null")
-                            recyclerView.adapter?.notifyDataSetChanged()
-                            return
-                        }
-                        jRepo.deleteJournalEntry(deletedJournalEntry.id)
-                        Snackbar.make(recyclerView, "Misclicked? No worries", Snackbar.LENGTH_LONG).setAction("Undo") {
-                            jRepo.insertJournalEntry(deletedJournalEntry)
-                        }.show()
-                        recyclerView.adapter?.notifyDataSetChanged()
-                    }
-                }
-            }
-        }
-        val touchHelper = ItemTouchHelper(swipeGesture)
-        touchHelper.attachToRecyclerView(recyclerView)
+    fun insertJournalEntry(deletedJournalEntry: JournalEntry) {
+        jRepo.insertJournalEntry(deletedJournalEntry)
     }
 
 }
