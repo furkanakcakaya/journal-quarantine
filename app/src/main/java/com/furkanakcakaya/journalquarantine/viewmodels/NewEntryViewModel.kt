@@ -1,18 +1,20 @@
 package com.furkanakcakaya.journalquarantine.viewmodels
 
+import android.app.Application
 import android.location.Location
 import android.net.Uri
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import com.furkanakcakaya.journalquarantine.entities.JournalEntry
 import com.furkanakcakaya.journalquarantine.repository.JournalRepository
 import com.google.android.gms.tasks.Task
 import java.util.*
 
-class NewEntryViewModel:ViewModel() {
-    private val jRepo = JournalRepository
+class NewEntryViewModel(application: Application) : AndroidViewModel(application) {
+    private val jRepo = JournalRepository(application)
     lateinit var locationTask: Task<Location>
     private val jEntry = JournalEntry(
-        1,
+        0,
         "Başlık ALınamadı",
         "Içerik Alınamadı",
         "Mood *",
@@ -20,11 +22,12 @@ class NewEntryViewModel:ViewModel() {
         "Konum Alınamadı",
         0.0,
         0.0,
-        listOf(),
+        "",
         "",
     )
+
     fun addEntry(title: String, content: String, mood: String){
-        var calendar = Calendar.getInstance()
+        val calendar = Calendar.getInstance()
         jEntry.title = title
         jEntry.content = content
         jEntry.mood = mood
@@ -34,10 +37,8 @@ class NewEntryViewModel:ViewModel() {
         jRepo.insertJournalEntry(jEntry)
     }
 
-    fun addMediaContent(mediaContent: List<Uri>?) {
-        if (mediaContent != null) {
-            jEntry.mediaContent = mediaContent
-        }
+    fun setMediaContent(mediaContent: String) {
+        jEntry.mediaContent = mediaContent
     }
 
     fun getLocation(){
@@ -50,7 +51,5 @@ class NewEntryViewModel:ViewModel() {
                 jEntry.locationName = "Permission denied."
             }
         }
-
     }
-
 }

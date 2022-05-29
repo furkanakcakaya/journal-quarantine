@@ -1,11 +1,14 @@
 package com.furkanakcakaya.journalquarantine.fragments
 
 import android.Manifest
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
@@ -16,6 +19,7 @@ import com.furkanakcakaya.journalquarantine.databinding.FragmentNewEntryBinding
 import com.furkanakcakaya.journalquarantine.viewmodels.NewEntryViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.snackbar.Snackbar
 
 class NewEntryFragment : Fragment() {
     private val TAG = "NewEntryFragment"
@@ -25,9 +29,11 @@ class NewEntryFragment : Fragment() {
     private var locationPermission = 0
 
     private var resultLauncher = registerForActivityResult(
-        ActivityResultContracts.GetMultipleContents(),
+        ActivityResultContracts.StartActivityForResult(),
         ActivityResultCallback { result ->
-            viewModel.addMediaContent(result)
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.dataString?.let { viewModel.setMediaContent(it) }
+            }
         })
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,19 +62,26 @@ class NewEntryFragment : Fragment() {
     }
 
     fun selectImages() {
-        val type = "image/*"
-        resultLauncher.launch(type)
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        intent.action = Intent.ACTION_GET_CONTENT
+        resultLauncher.launch( Intent.createChooser(intent, "Select Picture"))
     }
 
     fun addEntry(title: String, content: String, mood: String){
-        locationPermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-        if (locationPermission != PackageManager.PERMISSION_GRANTED ){ //İzin onaylanmamıştır.
-            ActivityCompat.requestPermissions(requireActivity(),
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 54)
-        }else{//İzin onaylanmıştır.
-            viewModel.locationTask = flpc.lastLocation
-            viewModel.getLocation()
+        if (title.isNotEmpty() && content.isNotEmpty()) {
+            locationPermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+            if (locationPermission != PackageManager.PERMISSION_GRANTED ){ //İzin onaylanmamıştır.
+                ActivityCompat.requestPermissions(requireActivity(),
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 54)
+            }else{//İzin onaylanmıştır.
+                viewModel.locationTask = flpc.lastLocation
+                viewModel.getLocation()
+            }
+            viewModel.addEntry(title, content, mood)
+        }else{
+            Snackbar.make(binding.root, "Please enter a title and content", Snackbar.LENGTH_SHORT).show()
         }
-        viewModel.addEntry(title, content, mood)
     }
 }

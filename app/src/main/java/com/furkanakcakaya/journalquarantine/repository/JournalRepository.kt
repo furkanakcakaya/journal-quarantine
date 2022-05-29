@@ -1,58 +1,57 @@
 package com.furkanakcakaya.journalquarantine.repository
 
-import android.util.Log
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.furkanakcakaya.journalquarantine.entities.JournalEntry
+import com.furkanakcakaya.journalquarantine.room.AppDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-object JournalRepository {
-    private val TAG = "JournalRepository"
+class JournalRepository(var application: Application) {
     private val journalData: MutableLiveData<List<JournalEntry>> = MutableLiveData()
+    private var db: AppDatabase = AppDatabase.getInstance(application)
 
     init {
-        getAllJournals()
+        loadJournals()
     }
 
     fun getJournalData(): LiveData<List<JournalEntry>> {
         return journalData
     }
 
-    private fun getAllJournals() {
-        val journalList = ArrayList<JournalEntry>()
-        journalList.add(
-            JournalEntry(
-                1,
-                "Journal 1",
-                "This is the first journal entry",
-                "Sample Mood",
-                "2020-01-01",
-                "Davutpaşa",
-                42.5,
-                41.4,
-                listOf(),
-                ""
-            )
-        )
-        journalData.value = journalList
-    }
-
-    private fun orderJournals(){
-        val journalList = journalData.value
-        journalList?.sortedBy { it.createdAt }
-        journalData.value = journalList
-    }
-
-    fun deleteJournalEntry(id: Int) {
-        journalData.value = journalData.value?.filter { it.id != id }
-        orderJournals()
+    fun loadJournals() {
+        CoroutineScope(Dispatchers.Main).launch {
+            journalData.value = db.journalDao().getAllJournals()
+        }
     }
 
     fun insertJournalEntry(entry: JournalEntry) {
-        val newJournalList = ArrayList<JournalEntry>()
-        newJournalList.addAll(journalData.value!!)
-        newJournalList.add(entry)
-        journalData.value = newJournalList
-        orderJournals()
+        CoroutineScope(Dispatchers.Main).launch {
+            db.journalDao().insertJournal(entry)
+            loadJournals()
+        }
+    }
+
+    fun deleteJournalEntry(id: Int) {
+        CoroutineScope(Dispatchers.Main).launch {
+            db.journalDao().deleteJournal(id)
+            loadJournals()
+        }
+    }
+
+    fun updateJournalEntry(id: Int,title: String, content: String, mood: String, media: String,password: String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            db.journalDao().updateJournal(id,title,content,mood,media,password)
+            loadJournals()
+        }
+    }
+
+    fun searchJournalEntry(query: String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            journalData.value = db.journalDao().searchJournal(query)
+        }
     }
 
 }
