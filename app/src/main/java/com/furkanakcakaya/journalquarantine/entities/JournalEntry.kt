@@ -5,6 +5,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import org.jetbrains.annotations.NotNull
+import java.io.Serializable
 import java.util.*
 
 @Entity(tableName = "journals")
@@ -19,4 +20,4 @@ data class JournalEntry(
     @ColumnInfo(name = "loc_lon") @NotNull var longitude: Double,
     @ColumnInfo(name = "media") @NotNull var mediaContent: String,
     @ColumnInfo(name = "password") @NotNull var password: String
-)
+):Serializable

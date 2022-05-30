@@ -9,7 +9,11 @@
         android:id="@+id/homepageFragment"
         android:name="com.furkanakcakaya.journalquarantine.fragments.HomepageFragment"
         android:label="fragment_homepage"
-        tools:layout="@layout/fragment_homepage" />
+        tools:layout="@layout/fragment_homepage" >
+        <action
+            android:id="@+id/action_homepageFragment_to_updateEntryFragment"
+            app:destination="@id/updateEntryFragment" />
+    </fragment>
     <fragment
         android:id="@+id/mapViewFragment"
         android:name="com.furkanakcakaya.journalquarantine.fragments.MapViewFragment"
@@ -20,4 +24,13 @@
         android:name="com.furkanakcakaya.journalquarantine.fragments.NewEntryFragment"
         android:label="fragment_new_entry"
         tools:layout="@layout/fragment_new_entry" />
+    <fragment
+        android:id="@+id/updateEntryFragment"
+        android:name="com.furkanakcakaya.journalquarantine.fragments.UpdateEntryFragment"
+        android:label="UpdateEntryFragment"
+        tools:layout="@layout/fragment_update_entry">
+        <argument
+            android:name="entry"
+            app:argType="com.furkanakcakaya.journalquarantine.entities.JournalEntry" />
+    </fragment>
 </navigation>

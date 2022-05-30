@@ -5,10 +5,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModel
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.furkanakcakaya.journalquarantine.R
 import com.furkanakcakaya.journalquarantine.databinding.JournalItemBinding
 import com.furkanakcakaya.journalquarantine.entities.JournalEntry
+import com.furkanakcakaya.journalquarantine.fragments.HomepageFragmentDirections
 
 class JournalAdapter(
     private val mContext:Context,
@@ -25,6 +27,12 @@ class JournalAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.journalItem = journalList[position]
+        holder.binding.lottieItem.setAnimation("${journalList[position].mood}.json")
+
+        holder.binding.cvJournal.setOnClickListener {
+            val nav = HomepageFragmentDirections.actionHomepageFragmentToUpdateEntryFragment(journalList[position])
+            Navigation.findNavController(it).navigate(nav)
+        }
     }
 
     override fun getItemCount(): Int {

@@ -6,15 +6,17 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.furkanakcakaya.journalquarantine.R
 import com.furkanakcakaya.journalquarantine.databinding.FragmentNewEntryBinding
 import com.furkanakcakaya.journalquarantine.viewmodels.NewEntryViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -58,7 +60,32 @@ class NewEntryFragment : Fragment() {
     }
 
     fun enterMood(){
-        //TODO: Popup to choose a mood, 1-2-3
+        val popup = PopupMenu(requireContext(), binding.lottieAnimationView)
+        MenuInflater(requireContext()).inflate(R.menu.mood_menu, popup.menu)
+        popup.show()
+        popup.setOnMenuItemClickListener {
+            when(it.itemId){
+                R.id.happy -> {
+                    viewModel.setMood("happy")
+                    Snackbar.make(binding.root, "Mood set to: Happy", Snackbar.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.normal -> {
+                    viewModel.setMood("normal")
+                    Snackbar.make(binding.root, "Mood set to: Normal", Snackbar.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.sad -> {
+                    viewModel.setMood("sad")
+                    Snackbar.make(binding.root, "Mood set to: Sad", Snackbar.LENGTH_SHORT).show()
+                    true
+                }
+                else -> {
+                    viewModel.setMood("normal")
+                    true
+                }
+            }
+        }
     }
 
     fun selectImages() {
@@ -69,7 +96,7 @@ class NewEntryFragment : Fragment() {
         resultLauncher.launch( Intent.createChooser(intent, "Select Picture"))
     }
 
-    fun addEntry(title: String, content: String, mood: String){
+    fun addEntry(title: String, content: String){
         if (title.isNotEmpty() && content.isNotEmpty()) {
             locationPermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
             if (locationPermission != PackageManager.PERMISSION_GRANTED ){ //İzin onaylanmamıştır.
@@ -79,7 +106,7 @@ class NewEntryFragment : Fragment() {
                 viewModel.locationTask = flpc.lastLocation
                 viewModel.getLocation()
             }
-            viewModel.addEntry(title, content, mood)
+            viewModel.addEntry(title, content)
         }else{
             Snackbar.make(binding.root, "Please enter a title and content", Snackbar.LENGTH_SHORT).show()
         }

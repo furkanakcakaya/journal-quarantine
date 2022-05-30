@@ -12,6 +12,7 @@
         android:layout_height="wrap_content">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cvJournal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -121,7 +122,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             app:layout_constraintBottom_toBottomOf="@+id/imageView"
-                            app:layout_constraintEnd_toStartOf="@+id/imageView4"
+                            app:layout_constraintEnd_toStartOf="@+id/lottieItem"
                             app:layout_constraintStart_toEndOf="@+id/imageView"
                             app:layout_constraintTop_toTopOf="@+id/imageView"
                             app:srcCompat="@drawable/location" />
@@ -134,19 +135,20 @@
                             android:layout_marginEnd="4dp"
                             android:text="@{journalItem.locationName}"
                             app:layout_constraintBottom_toBottomOf="@+id/imageView3"
-                            app:layout_constraintEnd_toStartOf="@+id/imageView4"
+                            app:layout_constraintEnd_toStartOf="@+id/lottieItem"
                             app:layout_constraintStart_toEndOf="@+id/imageView3"
                             app:layout_constraintTop_toTopOf="@+id/imageView3" />
 
-                        <ImageView
-                            android:id="@+id/imageView4"
+                        <com.airbnb.lottie.LottieAnimationView
+                            android:id="@+id/lottieItem"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:layout_marginEnd="32dp"
                             app:layout_constraintBottom_toBottomOf="@+id/imageView3"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="@+id/imageView3"
-                            tools:srcCompat="@tools:sample/avatars" />
+                            app:lottie_autoPlay="true"
+                            app:lottie_loop="true" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>
