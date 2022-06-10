@@ -14,7 +14,7 @@
         <entry key="..\:/Works/journal-quarantine/app/src/main/res/menu/bottom_bar.xml" value="0.27291666666666664" />
         <entry key="app/src/main/res/layout/fragment_new_entry.xml" value="0.2390625" />
         <entry key="app/src/main/res/layout/fragment_update_entry.xml" value="0.2390625" />
-        <entry key="app/src/main/res/layout/fragment_view_entry.xml" value="0.2390625" />
+        <entry key="app/src/main/res/layout/fragment_view_entry.xml" value="0.5" />
         <entry key="app/src/main/res/layout/journal_item.xml" value="0.2390625" />
         <entry key="app/src/main/res/menu/mood_menu.xml" value="0.26851851851851855" />
       </map>

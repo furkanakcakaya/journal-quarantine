@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuInflater
@@ -16,6 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
 import com.furkanakcakaya.journalquarantine.R
 import com.furkanakcakaya.journalquarantine.databinding.FragmentNewEntryBinding
 import com.furkanakcakaya.journalquarantine.viewmodels.NewEntryViewModel
@@ -34,7 +36,10 @@ class NewEntryFragment : Fragment() {
         ActivityResultContracts.StartActivityForResult(),
         ActivityResultCallback { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                result.data?.dataString?.let { viewModel.setMediaContent(it) }
+                result.data?.dataString?.let {
+                    viewModel.setMediaContent(it)
+                    binding.ivAddMedia.setImageURI(Uri.parse(it))
+                }
             }
         })
 
@@ -67,21 +72,29 @@ class NewEntryFragment : Fragment() {
             when(it.itemId){
                 R.id.happy -> {
                     viewModel.setMood("happy")
+                    binding.lottieAnimationView.setAnimation("happy.json")
+                    binding.lottieAnimationView.playAnimation()
                     Snackbar.make(binding.root, "Mood set to: Happy", Snackbar.LENGTH_SHORT).show()
                     true
                 }
                 R.id.normal -> {
                     viewModel.setMood("normal")
+                    binding.lottieAnimationView.setAnimation("normal.json")
+                    binding.lottieAnimationView.playAnimation()
                     Snackbar.make(binding.root, "Mood set to: Normal", Snackbar.LENGTH_SHORT).show()
                     true
                 }
                 R.id.sad -> {
                     viewModel.setMood("sad")
+                    binding.lottieAnimationView.setAnimation("sad.json")
+                    binding.lottieAnimationView.playAnimation()
                     Snackbar.make(binding.root, "Mood set to: Sad", Snackbar.LENGTH_SHORT).show()
                     true
                 }
                 else -> {
                     viewModel.setMood("normal")
+                    binding.lottieAnimationView.setAnimation("mood.json")
+                    binding.lottieAnimationView.playAnimation()
                     true
                 }
             }
@@ -107,6 +120,7 @@ class NewEntryFragment : Fragment() {
                 viewModel.getLocation()
             }
             viewModel.addEntry(title, content)
+            Navigation.findNavController(binding.root).navigate(R.id.action_newEntryFragment_to_homepageFragment)
         }else{
             Snackbar.make(binding.root, "Please enter a title and content", Snackbar.LENGTH_SHORT).show()
         }

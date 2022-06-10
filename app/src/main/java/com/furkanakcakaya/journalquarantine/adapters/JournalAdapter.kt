@@ -30,7 +30,7 @@ class JournalAdapter(
         holder.binding.lottieItem.setAnimation("${journalList[position].mood}.json")
 
         holder.binding.cvJournal.setOnClickListener {
-            val nav = HomepageFragmentDirections.actionHomepageFragmentToUpdateEntryFragment(journalList[position])
+            val nav = HomepageFragmentDirections.actionHomepageFragmentToViewEntryFragment(journalList[position])
             Navigation.findNavController(it).navigate(nav)
         }
     }

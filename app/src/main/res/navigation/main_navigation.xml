@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homepageFragment_to_updateEntryFragment"
             app:destination="@id/updateEntryFragment" />
+        <action
+            android:id="@+id/action_homepageFragment_to_viewEntryFragment"
+            app:destination="@id/viewEntryFragment" />
     </fragment>
     <fragment
         android:id="@+id/mapViewFragment"
@@ -23,12 +26,26 @@
         android:id="@+id/newEntryFragment"
         android:name="com.furkanakcakaya.journalquarantine.fragments.NewEntryFragment"
         android:label="fragment_new_entry"
-        tools:layout="@layout/fragment_new_entry" />
+        tools:layout="@layout/fragment_new_entry" >
+        <action
+            android:id="@+id/action_newEntryFragment_to_homepageFragment"
+            app:destination="@id/homepageFragment"
+            app:popUpTo="@id/main_navigation" />
+    </fragment>
     <fragment
         android:id="@+id/updateEntryFragment"
         android:name="com.furkanakcakaya.journalquarantine.fragments.UpdateEntryFragment"
         android:label="UpdateEntryFragment"
         tools:layout="@layout/fragment_update_entry">
+        <argument
+            android:name="entry"
+            app:argType="com.furkanakcakaya.journalquarantine.entities.JournalEntry" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewEntryFragment"
+        android:name="com.furkanakcakaya.journalquarantine.fragments.ViewEntryFragment"
+        android:label="ViewEntryFragment"
+        tools:layout="@layout/fragment_view_entry">
         <argument
             android:name="entry"
             app:argType="com.furkanakcakaya.journalquarantine.entities.JournalEntry" />

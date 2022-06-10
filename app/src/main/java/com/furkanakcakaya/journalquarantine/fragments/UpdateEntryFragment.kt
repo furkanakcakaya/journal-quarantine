@@ -27,6 +27,7 @@ class UpdateEntryFragment : Fragment() {
         viewModel.journalEntry = UpdateEntryFragmentArgs.fromBundle(requireArguments()).entry
         binding.journalEntry = viewModel.journalEntry
 
+
         return binding.root
     }
 }

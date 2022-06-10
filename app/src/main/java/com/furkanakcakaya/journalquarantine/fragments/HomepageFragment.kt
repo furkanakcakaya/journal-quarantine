@@ -2,15 +2,14 @@ package com.furkanakcakaya.journalquarantine.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.furkanakcakaya.journalquarantine.R
 import com.furkanakcakaya.journalquarantine.adapters.JournalAdapter
 import com.furkanakcakaya.journalquarantine.databinding.FragmentHomepageBinding
 import com.furkanakcakaya.journalquarantine.utils.SwipeGesture
@@ -48,20 +47,24 @@ class HomepageFragment : Fragment() {
         val swipeGesture = object : SwipeGesture(context){
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.bindingAdapterPosition
+                val currentEntry = viewModel.journalList.value?.get(position)
                 when(direction){
                     ItemTouchHelper.RIGHT -> {
-                        recyclerView.adapter?.notifyDataSetChanged()
-                    }
-                    ItemTouchHelper.LEFT -> {
-                        val deletedJournalEntry = viewModel.journalList.value?.get(position)
-                        if (deletedJournalEntry == null) {
-                            Log.i(TAG, "onSwiped: deletedJournalEntry is null")
+                        if (currentEntry == null) {
                             recyclerView.adapter?.notifyDataSetChanged()
                             return
                         }
-                        viewModel.deleteJournalEntry(deletedJournalEntry.id)
+                        val nav = HomepageFragmentDirections.actionHomepageFragmentToUpdateEntryFragment(currentEntry)
+                        Navigation.findNavController(binding.root).navigate(nav)
+                    }
+                    ItemTouchHelper.LEFT -> {
+                        if (currentEntry == null) {
+                            recyclerView.adapter?.notifyDataSetChanged()
+                            return
+                        }
+                        viewModel.deleteJournalEntry(currentEntry.id)
                         Snackbar.make(recyclerView, "Misclicked? No worries", Snackbar.LENGTH_LONG).setAction("Undo") {
-                            viewModel.insertJournalEntry(deletedJournalEntry)
+                            viewModel.insertJournalEntry(currentEntry)
                         }.show()
                         recyclerView.adapter?.notifyDataSetChanged()
                     }
