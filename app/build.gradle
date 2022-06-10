@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 allprojects {
@@ -69,7 +70,8 @@ dependencies {
 //  Lottie
     implementation 'com.airbnb.android:lottie:5.0.3'
 
-//  Location
+//  Location and Maps
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
     implementation 'com.google.android.gms:play-services-location:19.0.1'
 
 //  Room

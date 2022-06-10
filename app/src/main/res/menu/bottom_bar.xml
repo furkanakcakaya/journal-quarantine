@@ -10,7 +10,7 @@
         android:icon="@drawable/homepage"
         android:title="Homepage" />
     <item
-        android:id="@+id/mapViewFragment"
+        android:id="@+id/mapsFragment"
         android:icon="@drawable/map"
         android:title="Map" />
 </menu>
