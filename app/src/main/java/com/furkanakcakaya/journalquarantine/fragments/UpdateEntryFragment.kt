@@ -68,21 +68,21 @@ class UpdateEntryFragment : Fragment() {
                     viewModel.setMood("happy")
                     binding.lottieAnimationView.setAnimation("happy.json")
                     binding.lottieAnimationView.playAnimation()
-                    Snackbar.make(binding.root, "Mood set to: Happy", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root, getString(R.string.mood_set_happy), Snackbar.LENGTH_SHORT).show()
                     true
                 }
                 R.id.normal -> {
                     viewModel.setMood("normal")
                     binding.lottieAnimationView.setAnimation("normal.json")
                     binding.lottieAnimationView.playAnimation()
-                    Snackbar.make(binding.root, "Mood set to: Normal", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root, getString(R.string.mood_set_normal), Snackbar.LENGTH_SHORT).show()
                     true
                 }
                 R.id.sad -> {
                     viewModel.setMood("sad")
                     binding.lottieAnimationView.setAnimation("sad.json")
                     binding.lottieAnimationView.playAnimation()
-                    Snackbar.make(binding.root, "Mood set to: Sad", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root, getString(R.string.mood_set_sad), Snackbar.LENGTH_SHORT).show()
                     true
                 }
                 else -> {
@@ -100,16 +100,16 @@ class UpdateEntryFragment : Fragment() {
         intent.type = "image/*"
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
         intent.action = Intent.ACTION_GET_CONTENT
-        resultLauncher.launch( Intent.createChooser(intent, "Select Picture"))
+        resultLauncher.launch( Intent.createChooser(intent, getString(R.string.select_pic)))
     }
 
     fun addEntry(title: String, content: String){
         if (title.isNotEmpty() && content.isNotEmpty()) {
             viewModel.updateEntry(viewModel.journalEntry.id,title, content)
-            Snackbar.make(binding.root, "Update successful", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, getString(R.string.update_successful), Snackbar.LENGTH_SHORT).show()
             Navigation.findNavController(binding.root).navigate(R.id.action_updateEntryFragment_to_homepageFragment)
         }else{
-            Snackbar.make(binding.root, "Please enter a title and content", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, getString(R.string.enter_title_content), Snackbar.LENGTH_SHORT).show()
         }
     }
 }

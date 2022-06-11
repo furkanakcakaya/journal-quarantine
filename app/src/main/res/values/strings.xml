@@ -1,9 +1,23 @@
 <resources>
     <string name="app_name">Journal Quarantine</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="locations">Locations</string>
     <string name="new_entry">New Journal Entry</string>
     <string name="update">Edit Journal</string>
     <string name="title">Title</string>
+    <string name="mood_set_happy">Mood set to: Happy</string>
+    <string name="mood_set_normal">Mood set to: Normal</string>
+    <string name="mood_set_sad">Mood set to: Sad</string>
+    <string name="select_picture">Select Picture</string>
+    <string name="enter_title_content">Please enter a title and content</string>
+    <string name="date_error">Couldn\'t get date</string>
+    <string name="location_error">Couldn\'t get location</string>
+    <string name="permission_denied">Permission denied.</string>
+    <string name="location_not_found">Location not found</string>
+    <string name="pdf_success">PDF file generated successfully.</string>
+    <string name="permission_granted">Permission Granted</string>
+    <string name="coming_soon">Coming soon</string>
+    <string name="misclicked">Misclicked? No worries</string>
+    <string name="undo">Undo</string>
+    <string name="select_pic">Select Picture</string>
+    <string name="update_successful">Update successful</string>
 </resources>

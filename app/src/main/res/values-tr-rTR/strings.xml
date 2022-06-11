@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Günlük Karantinası</string>
+    <string name="locations">Konumlar</string>
+    <string name="new_entry">Yeni Günlük Girdisi</string>
+    <string name="update">Günlük Düzenle</string>
+    <string name="title">Başlık</string>
+    <string name="mood_set_happy">Geçerli duygudurum: Mutlu</string>
+    <string name="mood_set_normal">Geçerli duygudurum: Normal</string>
+    <string name="mood_set_sad">Geçerli duygudurum: Mutsuz</string>
+    <string name="select_picture">Resim seç</string>
+    <string name="enter_title_content">Lütfen başlık ve/veya içerik girişi yap</string>
+    <string name="date_error">Tarih alınamadı</string>
+    <string name="location_error">Konum alınamadı</string>
+    <string name="permission_denied">İzin alınamadı</string>
+    <string name="location_not_found">Konum bulunamadı</string>
+    <string name="pdf_success">PDF başarıyla oluşturuldu</string>
+    <string name="permission_granted">İzin alındı</string>
+    <string name="coming_soon">Çok yakında...</string>
+    <string name="misclicked">Yanlışlıkla mı? Endişelenme</string>
+    <string name="undo">Geri al</string>
+    <string name="select_pic">Resim seç</string>
+    <string name="update_successful">Düzenleme başarılı</string>
+</resources>

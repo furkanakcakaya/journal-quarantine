@@ -4,16 +4,16 @@ import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.ImageDecoder
+import android.graphics.BitmapFactory
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
 import android.graphics.pdf.PdfDocument.PageInfo
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.provider.MediaStore
+import android.text.StaticLayout
+import android.text.TextPaint
 import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
@@ -47,8 +47,11 @@ class ViewEntryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val entry =  ViewEntryFragmentArgs.fromBundle(requireArguments()).entry
-
         binding.entry = entry
+        if (entry.mood.isNotBlank()){
+            binding.lottieMood.setAnimation("${entry.mood}.json")
+            binding.lottieMood.playAnimation()
+        }
 
         if (entry.mediaContent.isNotBlank()){
             binding.imageView2.setImageURI(Uri.parse(entry.mediaContent))
@@ -72,7 +75,7 @@ class ViewEntryFragment : Fragment() {
                         true
                     }
                     R.id.share_friend -> {
-                        Snackbar.make(requireView(), "Coming soon", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(requireView(), getString(R.string.coming_soon), Snackbar.LENGTH_SHORT).show()
                         true
                     }
                     else -> {
@@ -109,9 +112,9 @@ class ViewEntryFragment : Fragment() {
                 val writeStorage = grantResults[0] == PackageManager.PERMISSION_GRANTED
                 val readStorage = grantResults[1] == PackageManager.PERMISSION_GRANTED
                 if (writeStorage && readStorage) {
-                    Snackbar.make(requireView(), "Permission Granted", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(requireView(), getString(R.string.permission_granted), Snackbar.LENGTH_SHORT).show()
                 } else {
-                    Snackbar.make(requireView(), "Permission Denied", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(requireView(), getString(R.string.permission_denied), Snackbar.LENGTH_SHORT).show()
                 }
             }
         }
@@ -119,53 +122,50 @@ class ViewEntryFragment : Fragment() {
 
     private fun createPDF(entry:JournalEntry){
         val pdfDocument = PdfDocument()
-        val paint = Paint()
-        val title = Paint()
-
+        val textPaint = Paint()
         val mypageInfo = PageInfo.Builder(792, 1120, 1).create()
-
         val myPage = pdfDocument.startPage(mypageInfo)
-
         val canvas = myPage.canvas
-
         if(entry.mediaContent.isNotBlank()){
-            val bmp = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                val source = ImageDecoder.createSource(requireContext().contentResolver, Uri.parse(entry.mediaContent))
-                ImageDecoder.decodeBitmap(source)
-            } else {
-                MediaStore.Images.Media.getBitmap(requireContext().contentResolver, Uri.parse(entry.mediaContent))
-            }
-            val scaledbmp = Bitmap.createScaledBitmap(bmp, 140, 140, false);
-            canvas.drawBitmap(scaledbmp, 0f, 0f, paint)
+            val bmp = BitmapFactory.decodeFile(entry.mediaContent)
+            val scaled = Bitmap.createScaledBitmap(bmp, bmp.width/2, bmp.height/2, false)
+            canvas.drawBitmap(scaled, 396f-bmp.width/4f, 1080f-bmp.height/2, null)
 
         }
 
-        title.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
-        title.textSize = 24f
-        title.color = ContextCompat.getColor(requireContext(), R.color.primaryColor)
+        textPaint.typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
+        textPaint.textSize = 36f
+        textPaint.color = ContextCompat.getColor(requireContext(), R.color.primaryColor)
+        canvas.drawText(entry.title.uppercase(), 120F, 110f, textPaint)
 
-        canvas.drawText(entry.title, 209f, 80f, title)
+        textPaint.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
+        textPaint.color = ContextCompat.getColor(requireContext(), R.color.secondaryColor)
+        textPaint.textAlign = Paint.Align.CENTER
+        textPaint.textSize = 18f
+        canvas.drawText(entry.createdAt, 620f, 80f, textPaint)
+        canvas.drawText(entry.locationName, 620f, 100f, textPaint)
 
-        title.typeface = Typeface.defaultFromStyle(Typeface.NORMAL)
-        title.color = ContextCompat.getColor(requireContext(), R.color.secondaryColor)
-        title.textSize = 15f
-        title.textAlign = Paint.Align.CENTER
-        canvas.drawText(entry.content, 396f, 560f, title)
+//        textPaint.textSize = 24f
+//        canvas.drawText(entry.content, 120F, 160f, textPaint)
+
+        val mTextLayout = StaticLayout.Builder.obtain(entry.content, 0, entry.content.length, TextPaint(), 592).build()
+        canvas.save()
+        val textX = 100f
+        val textY = 160f
+        canvas.translate(textX, textY);
+
+        mTextLayout.draw(canvas);
+        canvas.restore();
 
         pdfDocument.finishPage(myPage)
         val directory = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "JournalQuarantine")
-        val file = File(directory, "${entry.title.lowercase()}.pdf")
+        val file = File(directory, "${entry.id}-${entry.title.lowercase()}.pdf")
         try {
             directory.mkdirs()
-        }catch (e:Exception){
-            e.printStackTrace()
-        }
-
-        try {
             pdfDocument.writeTo(FileOutputStream(file))
             Toast.makeText(
                 this.requireContext(),
-                "PDF file generated successfully.",
+                getString(R.string.pdf_success),
                 Toast.LENGTH_SHORT
             ).show()
         } catch (e: IOException) {

@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.furkanakcakaya.journalquarantine.R
 import com.furkanakcakaya.journalquarantine.adapters.JournalAdapter
 import com.furkanakcakaya.journalquarantine.databinding.FragmentHomepageBinding
 import com.furkanakcakaya.journalquarantine.utils.SwipeGesture
@@ -21,7 +22,6 @@ import com.google.android.material.snackbar.Snackbar
 class HomepageFragment : Fragment() {
     private lateinit var binding: FragmentHomepageBinding
     private lateinit var viewModel: HomepageViewModel
-    private val TAG = "HomepageFragment"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +79,8 @@ class HomepageFragment : Fragment() {
                             return
                         }
                         viewModel.deleteJournalEntry(currentEntry.id)
-                        Snackbar.make(recyclerView, "Misclicked? No worries", Snackbar.LENGTH_LONG).setAction("Undo") {
+                        Snackbar.make(recyclerView, getString(R.string.misclicked), Snackbar.LENGTH_LONG).setAction(getString(
+                                                    R.string.undo)) {
                             viewModel.insertJournalEntry(currentEntry)
                         }.show()
                         recyclerView.adapter?.notifyDataSetChanged()

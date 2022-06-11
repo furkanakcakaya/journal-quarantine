@@ -3,10 +3,13 @@ package com.furkanakcakaya.journalquarantine.viewmodels
 import android.app.Application
 import android.location.Geocoder
 import android.location.Location
+import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
+import com.furkanakcakaya.journalquarantine.R
 import com.furkanakcakaya.journalquarantine.entities.JournalEntry
 import com.furkanakcakaya.journalquarantine.repository.JournalRepository
 import com.google.android.gms.tasks.Task
+import java.io.File
 import java.io.IOException
 import java.util.*
 
@@ -16,11 +19,11 @@ class NewEntryViewModel(application: Application) : AndroidViewModel(application
     lateinit var locationTask: Task<Location>
     private val jEntry = JournalEntry(
         0,
-        "Başlık ALınamadı",
-        "Içerik Alınamadı",
+        "",
+        "",
         "normal",
-        "Tarih Alınamadı",
-        "Konum Alınamadı",
+        application.getString(R.string.date_error),
+        application.getString(R.string.location_error),
         0.0,
         0.0,
         "",
@@ -34,7 +37,23 @@ class NewEntryViewModel(application: Application) : AndroidViewModel(application
         jEntry.createdAt = "${calendar.get(Calendar.DAY_OF_MONTH)} " +
                 "${calendar.getDisplayName(Calendar.MONTH,Calendar.SHORT, Locale.ENGLISH)} " +
                 "${calendar.get(Calendar.YEAR)}"
+        copyFileToAppDir()
         jRepo.insertJournalEntry(jEntry)
+    }
+
+    private fun copyFileToAppDir() {
+        if (jEntry.mediaContent.isNotBlank()){
+            val file = getApplication<Application>().contentResolver.openInputStream(Uri.parse(jEntry.mediaContent))
+            val dir = File(getApplication<Application>().filesDir, "images")
+            val newFile = File(dir, "${jEntry.id}-${jEntry.title}.jpg")
+            try {
+                newFile.createNewFile()
+                file?.copyTo(newFile.outputStream())
+                jEntry.mediaContent = newFile.absolutePath
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
     }
 
     fun setMediaContent(mediaContent: String) {
@@ -49,7 +68,7 @@ class NewEntryViewModel(application: Application) : AndroidViewModel(application
                 jEntry.locationName = getAddress(it.latitude, it.longitude)
 
             }else{
-                jEntry.locationName = "Permission denied."
+                jEntry.locationName = getApplication<Application>().getString(R.string.permission_denied)
             }
         }
     }
@@ -62,7 +81,7 @@ class NewEntryViewModel(application: Application) : AndroidViewModel(application
             obj.subAdminArea
         } catch (e: IOException) {
             e.printStackTrace()
-            "Location not found"
+            getApplication<Application>().getString(R.string.location_not_found)
         }
     }
 
