@@ -4,14 +4,16 @@ import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
 import android.graphics.pdf.PdfDocument.PageInfo
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
@@ -126,28 +128,38 @@ class ViewEntryFragment : Fragment() {
 
         val canvas = myPage.canvas
 
-        val bmp = BitmapFactory.decodeFile(entry.mediaContent);
-        val scaledbmp = Bitmap.createScaledBitmap(bmp, 140, 140, false);
+        if(entry.mediaContent.isNotBlank()){
+            val bmp = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                val source = ImageDecoder.createSource(requireContext().contentResolver, Uri.parse(entry.mediaContent))
+                ImageDecoder.decodeBitmap(source)
+            } else {
+                MediaStore.Images.Media.getBitmap(requireContext().contentResolver, Uri.parse(entry.mediaContent))
+            }
+            val scaledbmp = Bitmap.createScaledBitmap(bmp, 140, 140, false);
+            canvas.drawBitmap(scaledbmp, 0f, 0f, paint)
 
-        canvas.drawBitmap(scaledbmp, 0f, 0f, paint)
+        }
 
         title.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
+        title.textSize = 24f
+        title.color = ContextCompat.getColor(requireContext(), R.color.primaryColor)
 
-        title.textSize = 15f
-        title.color = ContextCompat.getColor(requireContext(), R.color.purple_200)
-
-        canvas.drawText("A portal for IT professionals.", 209f, 100f, title)
-        canvas.drawText("Geeks for Geeks", 209f, 80f, title)
+        canvas.drawText(entry.title, 209f, 80f, title)
 
         title.typeface = Typeface.defaultFromStyle(Typeface.NORMAL)
-        title.color = ContextCompat.getColor(requireContext(), R.color.purple_200)
+        title.color = ContextCompat.getColor(requireContext(), R.color.secondaryColor)
         title.textSize = 15f
-
         title.textAlign = Paint.Align.CENTER
-        canvas.drawText("This is sample document which we have created.", 396f, 560f, title)
+        canvas.drawText(entry.content, 396f, 560f, title)
 
         pdfDocument.finishPage(myPage)
-        val file = File(Environment.getExternalStorageDirectory(), "GFG.pdf")
+        val directory = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "JournalQuarantine")
+        val file = File(directory, "${entry.title.lowercase()}.pdf")
+        try {
+            directory.mkdirs()
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
 
         try {
             pdfDocument.writeTo(FileOutputStream(file))
@@ -160,7 +172,6 @@ class ViewEntryFragment : Fragment() {
             e.printStackTrace()
         }
         pdfDocument.close()
-        Snackbar.make(requireView(), "PDF created", Snackbar.LENGTH_SHORT).show()
     }
 }
 
